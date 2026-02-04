@@ -1,0 +1,695 @@
+---
+title: "Interventional Radiology Classification Framework"
+description: "Document Version: 1.0
+Last Updated: [Current Date]
+Next Review: After initial validation complete"
+---
+
+## IR Procedure Classification Framework
+
+### Rules Document for Implementation
+
+---
+
+## I. OVERVIEW
+
+**Purpose**: Systematically categorize interventional radiology procedures for cost analysis, utilization review, and physician practice pattern analysis.
+
+**Data Structure**: One row per CPT code; multiple CPT codes can map to the same claim/case
+
+- Primary classification source: CPT codes
+- Secondary source: Primary_procedure field (if CPT invalid/missing)
+- ICD-10 codes: Reserved for future embolization subtype refinement
+
+**Output Fields**:
+
+- `procedure_category` (9 possible values)
+- `procedure_subtype` (specific to each category)
+- `classification_confidence` (High/Medium/Low)
+- `manual_review_flag` (Yes/No)
+
+---
+
+## II. PROCEDURE CATEGORIES & SUBTYPES
+
+### Category 1: VENOUS ACCESS
+
+**Subtypes**:
+
+- PICC/Midline
+- Tunneled Catheter
+- Port
+- Non-tunneled Central Line
+
+**CPT Code Mapping**:
+
+```
+PICC/Midline:
+- 36568: Insertion of peripherally inserted central venous catheter (PICC), without subcutaneous port or pump; younger than 5 years
+- 36569: age 5 years or older
+- 36570: Insertion of peripherally inserted central venous access device, with subcutaneous port; younger than 5 years
+- 36571: age 5 years or older
+
+Tunneled Catheter:
+- 36557: Insertion of tunneled centrally inserted central venous catheter, without subcutaneous port or pump; younger than 5 years
+- 36558: age 5 years or older
+- 36560: Insertion of tunneled centrally inserted central venous access device, with subcutaneous port; younger than 5 years
+- 36561: age 5 years or older
+- 36563: Insertion of tunneled centrally inserted central venous access device with subcutaneous pump
+- 36565: Insertion of tunneled centrally inserted central venous access device, requiring 2 catheters via 2 separate venous access sites; without subcutaneous port or pump
+- 36566: with subcutaneous port(s)
+
+Port:
+- 36570: Insertion of peripherally inserted central venous access device, with subcutaneous port; younger than 5 years
+- 36571: age 5 years or older
+- 36560-36561, 36563, 36566: (with port designation)
+
+Non-tunneled Central Line:
+- 36555: Insertion of non-tunneled centrally inserted central venous catheter; younger than 5 years
+- 36556: age 5 years or older
+```
+
+---
+
+### Category 2: ARTERIAL INTERVENTIONS
+
+**Subtypes**:
+
+- Angioplasty/Stenting
+- Atherectomy
+- Thrombolysis/Thrombectomy
+- Other Arterial
+
+**CPT Code Mapping**:
+
+```
+Angioplasty/Stenting:
+- 37220: Revascularization, endovascular, open or percutaneous, iliac artery, unilateral, initial vessel; with transluminal angioplasty
+- 37221: with transluminal stent placement
+- 37222: each additional ipsilateral iliac vessel; with transluminal angioplasty
+- 37223: with transluminal stent placement
+- 37224: Revascularization, endovascular, open or percutaneous, femoral, popliteal artery(s), unilateral; with transluminal angioplasty
+- 37225: with atherectomy, includes angioplasty within the same vessel, when performed
+- 37226: with transluminal stent placement
+- 37227: with transluminal stent placement and atherectomy
+- 37228: Revascularization, endovascular, open or percutaneous, tibial, peroneal artery, unilateral, initial vessel; with transluminal angioplasty
+- 37229: with atherectomy, includes angioplasty within the same vessel, when performed
+- 37230: with transluminal stent placement
+- 37231: with transluminal stent placement and atherectomy
+- 37232: each additional tibial/peroneal vessel; with transluminal angioplasty
+- 37233: with atherectomy
+- 37234: with transluminal stent placement
+- 37235: with transluminal stent placement and atherectomy
+- 37236: Transcatheter placement of an intravascular stent(s) (except lower extremity artery(s) for occlusive disease, cervical carotid, extracranial vertebral or intrathoracic carotid, intracranial, or coronary), open or percutaneous, including radiological supervision and interpretation and including all angioplasty within the same vessel, when performed; initial artery
+- 37237: each additional artery
+- 37238: Transcatheter placement of an intravascular stent(s), open or percutaneous, including radiological supervision and interpretation and including angioplasty within the same vessel, when performed; initial vein
+- 37239: each additional vein
+- 0505T: Endovenous femoral-popliteal arterial revascularization, with transcatheter placement of intravascular stent graft(s) and closure by any method, including percutaneous or open vascular access, ultrasound guidance for vascular access when performed, all catheterization(s) and intraprocedural roadmapping and imaging guidance necessary to complete the intervention, all associated radiological supervision and interpretation, when performed, with crossing of the occlusive lesion in an extraluminal fashion
+- 0506T: Macular pigment optical density measurement by heterochromatic flicker photometry, unilateral or bilateral, with interpretation and report
+- 0507T: Near-infrared dual imaging (ie, simultaneous reflective and trans-illuminated light) of meibomian glands, unilateral or bilateral, with interpretation and report
+- 0508T: Pulse-echo ultrasound bone density measurement resulting in indicator of axial bone mineral density, tibia
+
+Atherectomy:
+- 37225: with atherectomy, includes angioplasty within the same vessel, when performed (femoral-popliteal)
+- 37227: with transluminal stent placement and atherectomy (femoral-popliteal)
+- 37229: with atherectomy, includes angioplasty within the same vessel, when performed (tibial-peroneal)
+- 37231: with transluminal stent placement and atherectomy (tibial-peroneal)
+- 37233: with atherectomy (tibial-peroneal additional vessels)
+- 37235: with transluminal stent placement and atherectomy (tibial-peroneal additional vessels)
+
+Thrombolysis/Thrombectomy:
+- 37184: Primary percutaneous transluminal mechanical thrombectomy, noncoronary, arterial or arterial bypass graft, including fluoroscopic guidance and intraprocedural pharmacological thrombolytic injection(s); initial vessel
+- 37185: second and all subsequent vessel(s) within the same vascular family
+- 37186: second and all subsequent vessel(s) in different vascular families
+- 37187: Percutaneous transluminal mechanical thrombectomy, vein(s), including intraprocedural pharmacological thrombolytic injections and fluoroscopic guidance
+- 37188: Percutaneous transluminal mechanical thrombectomy, vein(s), including intraprocedural pharmacological thrombolytic injections and fluoroscopic guidance, repeat treatment on subsequent day during course of thrombolytic therapy
+
+Other Arterial:
+- Any other arterial intervention codes not listed above
+```
+
+---
+
+### Category 3: EMBOLIZATION
+
+**Subtypes**:
+
+- Hemorrhage/Trauma
+- Uterine Fibroid (UFE)
+- Varicocele
+- Other Embolization
+
+**CPT Code Mapping**:
+
+```
+Core Embolization CPT Codes:
+- 37241: Vascular embolization or occlusion, inclusive of all radiological supervision and interpretation, intraprocedural roadmapping, and imaging guidance necessary to complete the intervention; venous, other than hemorrhage (eg, congenital or acquired venous malformations, venous and capillary hemangiomas, varices, varicocele)
+- 37242: arterial, other than hemorrhage or tumor (eg, congenital or acquired arterial malformations, arteriovenous malformations, arteriovenous fistulas, aneurysms, pseudoaneurysms)
+- 37243: for tumors, organ ischemia, or infarction
+- 37244: for arterial or venous hemorrhage or lymphatic extravasation
+
+Subtype Assignment (requires ICD-10 review - see Section IV):
+- UFE: 37243 + ICD-10 D25.x (uterine leiomyoma)
+- Varicocele: 37241 + ICD-10 I86.1 (scrotal varices)
+- Hemorrhage/Trauma: 37244 OR (37241-37243 + trauma ICD-10 codes S00-T88)
+- Other: All other 37241-37244 cases
+```
+
+**NOTE**: Embolization subtype classification requires ICD-10 code review. See Section IV for detailed rules (TO BE DEVELOPED).
+
+---
+
+### Category 4: ONCOLOGIC INTERVENTIONS
+
+**Subtypes**:
+
+- Thermal Ablation
+- Y90 Radioembolization
+- TACE/Chemoembolization
+- Tumor Embolization
+
+**CPT Code Mapping**:
+
+```
+Thermal Ablation:
+- 32994: Ablation therapy for reduction or eradication of 1 or more pulmonary tumor(s) including pleura or chest wall when involved by tumor extension, percutaneous, including imaging guidance when performed, unilateral; cryoablation
+- 32998: radiofrequency
+- 47380: Ablation, open, of 1 or more liver tumor(s); radiofrequency
+- 47381: cryosurgical
+- 47382: Ablation, 1 or more liver tumor(s), percutaneous, radiofrequency
+- 47383: Ablation, 1 or more liver tumor(s), percutaneous, cryoablation
+- 50250: Ablation, open, 1 or more renal mass lesion(s), cryosurgical, including intraoperative ultrasound, if performed
+- 50542: Laparoscopy, surgical; ablation of renal cysts
+- 50592: Ablation, 1 or more renal tumor(s), percutaneous, unilateral, radiofrequency
+- 50593: cryotherapy
+- 76940: Ultrasound guidance for, and monitoring of, parenchymal tissue ablation
+- 19105: Ablation, cryosurgical, of fibroadenoma, including ultrasound guidance, each fibroadenoma
+- 20982: Ablation therapy for reduction or eradication of 1 or more bone tumors (eg, metastasis) including adjacent soft tissue when involved by tumor extension, percutaneous, including imaging guidance when performed; radiofrequency ablation
+
+Y90 Radioembolization:
+- 37243 (embolization for tumor) + Liver cancer ICD-10 (C22.x) or liver mets
+- May also see: 79445 (Radiopharmaceutical therapy, by intra-arterial particulate administration)
+**NOTE**: Difficult to distinguish from TACE by CPT alone - requires ICD-10 + procedure description review
+
+TACE/Chemoembolization:
+- 37243 (embolization for tumor) + chemotherapy administration codes
+- 96420: Chemotherapy administration, intra-arterial; push technique
+- 96422: infusion technique, up to 1 hour
+- 96423: infusion technique, each additional hour
+**NOTE**: Presence of chemo codes indicates TACE
+
+Tumor Embolization (bland):
+- 37243 (for tumor) without chemo codes and without Y90 indicators
+- Bland embolization for symptomatic tumor control
+```
+
+**NOTE**: Oncologic subtype classification requires ICD-10 + additional code review. See Section IV for detailed rules (TO BE DEVELOPED).
+
+---
+
+### Category 5: VENOUS INTERVENTIONS
+
+**Subtypes**:
+
+- IVC Filter
+- DVT/PE Treatment
+- Venous Stenting
+- Venoplasty
+
+**CPT Code Mapping**:
+
+```
+IVC Filter:
+- 37191: Insertion of intravascular vena cava filter, endovascular approach including vascular access, vessel selection, and radiological supervision and interpretation, intraprocedural roadmapping, and imaging guidance (ultrasound and fluoroscopy), when performed
+- 37193: Retrieval (removal) of intravascular vena cava filter, endovascular approach including vascular access, vessel selection, and radiological supervision and interpretation, intraprocedural roadmapping, and imaging guidance (ultrasound and fluoroscopy), when performed
+
+DVT/PE Treatment:
+- 37187: Percutaneous transluminal mechanical thrombectomy, vein(s), including intraprocedural pharmacological thrombolytic injections and fluoroscopic guidance
+- 37188: repeat treatment on subsequent day
+- 37212: Transcatheter therapy, venous infusion for thrombolysis, any method, including radiological supervision and interpretation, initial treatment day
+- 37213: continued treatment on subsequent day during course of thrombolytic therapy, including radiological supervision and interpretation
+- 37214: cessation of thrombolysis including removal of catheter and vessel closure by any method
+
+Venous Stenting:
+- 37238: Transcatheter placement of an intravascular stent(s), open or percutaneous, including radiological supervision and interpretation and including angioplasty within the same vessel, when performed; initial vein
+- 37239: each additional vein
+
+Venoplasty:
+- 37248: Transluminal balloon angioplasty (except lower extremity artery(ies) for occlusive disease, intracranial, coronary, pulmonary, or dialysis circuit), open or percutaneous, including all imaging and radiological supervision and interpretation necessary to perform the angioplasty within the same vein; initial vein
+- 37249: each additional vein
+```
+
+---
+
+### Category 6: IMAGE-GUIDED DRAINAGE
+
+**Subtypes**:
+
+- Paracentesis
+- Thoracentesis
+- Nephrostomy/Exchange
+- Abscess/Fluid Drainage
+- Biliary Drainage
+
+**CPT Code Mapping**:
+
+```
+Paracentesis:
+- 49082: Abdominal paracentesis (diagnostic or therapeutic); without imaging guidance
+- 49083: with imaging guidance
+
+Thoracentesis:
+- 32554: Thoracentesis, needle or catheter, aspiration of the pleural space; without imaging guidance
+- 32555: with imaging guidance
+- 32556: Pleural drainage, percutaneous, with insertion of indwelling catheter; without imaging guidance
+- 32557: with imaging guidance
+
+Nephrostomy/Exchange:
+- 50432: Placement of nephrostomy catheter, percutaneous, including diagnostic nephrostogram and/or ureterogram when performed, imaging guidance (eg, ultrasound and/or fluoroscopy) and all associated radiological supervision and interpretation
+- 50398: Change of nephrostomy or pyelostomy tube
+- 50389: Removal of nephrostomy tube, requiring fluoroscopic guidance (eg, with concurrent indwelling ureteral stent)
+
+Abscess/Fluid Drainage:
+- 49405: Image-guided fluid collection drainage by catheter (eg, abscess, hematoma, seroma, lymphocele, cyst); visceral (eg, kidney, liver, spleen, lung/mediastinum), percutaneous
+- 49406: peritoneal or retroperitoneal, percutaneous
+- 49407: peritoneal or retroperitoneal, transvaginal or transrectal
+- 10030: Image-guided fluid collection drainage by catheter (eg, abscess, hematoma, seroma, lymphocele, cyst), soft tissue (eg, extremity, abdominal wall, neck), percutaneous
+- 32556: Pleural drainage, percutaneous, with insertion of indwelling catheter; without imaging guidance
+- 32557: with imaging guidance
+
+Biliary Drainage:
+- 47533: Placement of biliary drainage catheter, percutaneous, including diagnostic cholangiography when performed, imaging guidance (eg, fluoroscopy), and all associated radiological supervision and interpretation; external
+- 47534: internal-external
+- 47535: Conversion of external biliary drainage catheter to internal-external biliary drainage catheter, percutaneous, including diagnostic cholangiography when performed, imaging guidance (eg, fluoroscopy), and all associated radiological supervision and interpretation
+- 47536: Exchange of biliary drainage catheter (eg, external, internal-external, or conversion of internal-external to external only), percutaneous, including diagnostic cholangiography when performed, imaging guidance (eg, fluoroscopy), and all associated radiological supervision and interpretation
+- 47510: Introduction of percutaneous transhepatic catheter for biliary drainage
+```
+
+---
+
+### Category 7: IMAGE-GUIDED BIOPSY
+
+**Subtypes**:
+
+- Liver Biopsy
+- Kidney Biopsy
+- Lung/Thoracic Biopsy
+- Abdominal/Pelvic Biopsy
+- Other Biopsy
+
+**CPT Code Mapping**:
+
+```
+Liver Biopsy:
+- 47000: Biopsy of liver, needle; percutaneous
+- 47001: when done for indicated purpose at time of other major procedure (List separately in addition to code for primary procedure)
+
+Kidney Biopsy:
+- 50200: Renal biopsy; percutaneous, by trocar or needle
+
+Lung/Thoracic Biopsy:
+- 32405: Biopsy, lung or mediastinum, percutaneous needle
+- 32408: Core needle biopsy, lung or mediastinum, percutaneous, including imaging guidance, when performed
+
+Abdominal/Pelvic Biopsy:
+- 49180: Biopsy, abdominal or retroperitoneal mass, percutaneous needle
+- 49321: Laparoscopy, surgical; with biopsy (single or multiple)
+
+Other Biopsy:
+- 10005: Fine needle aspiration biopsy, including ultrasound guidance; first lesion
+- 10006: each additional lesion
+- 10007: Fine needle aspiration biopsy, including fluoroscopic guidance; first lesion
+- 10008: each additional lesion
+- 10009: Fine needle aspiration biopsy, including CT guidance; first lesion
+- 10010: each additional lesion
+- 10011: Fine needle aspiration biopsy, including MR guidance; first lesion
+- 10012: each additional lesion
+- 19081: Biopsy, breast, with placement of breast localization device(s) (eg, clip, metallic pellet), when performed, and imaging of the biopsy specimen, when performed, percutaneous; first lesion, including stereotactic guidance
+- 19082: each additional lesion
+- 19083: first lesion, including ultrasound guidance
+- 19084: each additional lesion
+- 19085: first lesion, including magnetic resonance guidance
+- 19086: each additional lesion
+- 20206: Biopsy, muscle, percutaneous needle
+- 20220: Biopsy, bone, trocar, or needle; superficial (eg, ilium, sternum, spinous process, ribs)
+- 20225: deep (eg, vertebral body, femur)
+```
+
+---
+
+### Category 8: ENTERIC ACCESS
+
+**Subtypes**:
+
+- Gastrostomy (G-tube)
+- Gastrojejunostomy (GJ-tube)
+- Jejunostomy (J-tube)
+- Tube Exchange
+
+**CPT Code Mapping**:
+
+```
+Gastrostomy (G-tube):
+- 49440: Insertion of gastrostomy tube, percutaneous, under fluoroscopic guidance including contrast injection(s), image documentation and report
+- 43246: Esophagogastroduodenoscopy, flexible, transoral; with directed placement of percutaneous gastrostomy tube
+- 43653: Laparoscopy, surgical; gastrostomy, temporary or permanent, with or without suture reinforcement
+
+Gastrojejunostomy (GJ-tube):
+- 49441: Insertion of duodenostomy or jejunostomy tube, percutaneous, under fluoroscopic guidance including contrast injection(s), image documentation and report
+- 44372: Small intestinal endoscopy, enteroscopy beyond second portion of duodenum, including ileum; with placement of percutaneous jejunostomy tube
+- 44373: with conversion of percutaneous gastrostomy tube to percutaneous jejunostomy tube
+
+Jejunostomy (J-tube):
+- 44015: Tube or needle catheter jejunostomy for enteral alimentation, intraoperative, any method
+- 44310: Ileostomy or jejunostomy, non-tube
+- 49441: Insertion of duodenostomy or jejunostomy tube, percutaneous, under fluoroscopic guidance
+
+Tube Exchange:
+- 49450: Replacement of gastrostomy or cecostomy (or other colonic) tube, percutaneous, under fluoroscopic guidance including contrast injection(s), image documentation and report
+- 49451: Replacement of duodenostomy or jejunostomy tube, percutaneous, under fluoroscopic guidance including contrast injection(s), image documentation and report
+- 49452: Replacement of gastro-jejunostomy tube, percutaneous, under fluoroscopic guidance including contrast injection(s), image documentation and report
+```
+
+---
+
+### Category 9: DIAGNOSTIC/OTHER
+
+**Subtypes**:
+
+- Peripheral Angiography
+- Visceral Angiography
+- Venography
+- Neuraxial/Lumbar Puncture
+- Other
+
+**CPT Code Mapping**:
+
+```
+Peripheral Angiography:
+- 75710: Angiography, extremity, unilateral, radiological supervision and interpretation
+- 75716: Angiography, extremity, bilateral, radiological supervision and interpretation
+- 75625: Aortography, abdominal, by serialography, radiological supervision and interpretation
+- 75630: Aortography, abdominal plus bilateral iliofemoral lower extremity, catheter, by serialography, radiological supervision and interpretation
+
+Visceral Angiography:
+- 75724: Angiography, renal, unilateral, selective (including flush aortogram), radiological supervision and interpretation
+- 75726: bilateral, selective (including flush aortogram), radiological supervision and interpretation
+- 75731: Angiography, adrenal, unilateral, selective, radiological supervision and interpretation
+- 75733: bilateral, selective, radiological supervision and interpretation
+- 75736: Angiography, pelvic, selective or supraselective, radiological supervision and interpretation
+
+Venography:
+- 75820: Venography, extremity, unilateral, radiological supervision and interpretation
+- 75822: bilateral, radiological supervision and interpretation
+- 75825: Venography, caval, inferior, with serialography, radiological supervision and interpretation
+- 75827: Venography, caval, superior, with serialography, radiological supervision and interpretation
+- 75831: Venography, renal, unilateral, selective, radiological supervision and interpretation
+- 75833: bilateral, selective, radiological supervision and interpretation
+
+Neuraxial/Lumbar Puncture:
+- 62270: Spinal puncture, lumbar, diagnostic
+- 62272: Spinal puncture, therapeutic, for drainage of cerebrospinal fluid (by needle or catheter)
+- 62328: Spinal puncture for injection of anesthetic or steroid
+
+Other:
+- Any valid IR CPT code not classified above
+- Unknown/unrecognized CPT codes that cannot be mapped
+```
+
+---
+
+## III. CLASSIFICATION ALGORITHM
+
+### Step 1: Data Preparation
+
+For each **claim** (group of rows with same claim ID):
+
+1. Collect all CPT codes associated with the claim
+2. Collect primary_procedure field value
+3. Collect all ICD-10 codes (for future use)
+
+### Step 2: CPT Code Validation
+
+For each CPT code in the claim:
+
+1. Check if CPT code is in the master mapping (Sections II.1-II.9)
+2. If **valid**: Proceed to Step 3
+3. If **invalid/unrecognized**: Flag and proceed to Step 4
+
+### Step 3: Procedure Hierarchy Application
+
+Apply the **procedure hierarchy** to determine primary classification:
+
+**Hierarchy (Highest → Lowest Priority)**:
+
+1. Oncologic Interventions
+2. Arterial Interventions
+3. Embolization
+4. Venous Interventions
+5. Venous Access
+6. Image-Guided Drainage
+7. Image-Guided Biopsy
+8. Enteric Access
+9. Diagnostic/Other
+
+**Rules**:
+
+- Identify ALL categories present in the claim's CPT codes
+- Assign the claim to the **highest priority category** found
+- Within that category, assign to the **most specific subtype** based on CPT codes present
+- If multiple subtypes within same category, assign to **first subtype identified** in CPT code order
+
+**Example**:
+
+- Claim has CPT: 75710 (peripheral angiography) + 37224 (femoral angioplasty)
+- Categories found: Diagnostic/Other (#9) + Arterial Interventions (#2)
+- **Assigned**: Arterial Interventions → Angioplasty/Stenting (hierarchy priority #2 \> #9)
+
+### Step 4: Primary_Procedure Fallback
+
+If **no valid CPT codes** found OR **all CPT codes invalid**:
+
+1. Use primary_procedure field for classification
+2. Apply text matching rules:
+
+```
+Primary_Procedure Text → Category Assignment:
+
+"VASCULAR ACCESS" → Venous Access (subtype: unable to determine from text)
+"PARACENTESIS" → Image-Guided Drainage → Paracentesis
+"BIOPSY" → Image-Guided Biopsy (subtype: unable to determine from text)
+"NEPHROSTOMY" → Image-Guided Drainage → Nephrostomy/Exchange
+"ANGIOGRAM" → Diagnostic/Other → Peripheral or Visceral Angiography
+"EMBOLIZATION" → Embolization (subtype: Other Embolization)
+"DRAINAGE" → Image-Guided Drainage → Abscess/Fluid Drainage
+"FEEDING TUBE" or "G-TUBE" or "GJ-TUBE" → Enteric Access (subtype based on text)
+"LUMBAR PUNCTURE" → Diagnostic/Other → Neuraxial/Lumbar Puncture
+"THORACENTESIS" → Image-Guided Drainage → Thoracentesis
+
+Unrecognized text → Category: Unclassified, Subtype: Unclassified
+```
+
+### Step 5: Classification Confidence Assignment
+
+**High Confidence**:
+
+- Valid CPT code(s) found
+- Category and subtype clearly identified from CPT codes
+- No conflicting codes present
+
+**Medium Confidence**:
+
+- Valid CPT code(s) found BUT subtype requires ICD-10 refinement (e.g., embolization subtypes)
+- Multiple therapeutic procedures in same claim (hierarchy applied but clinical judgment may differ)
+- Primary_procedure text used with clear match to category
+
+**Low Confidence**:
+
+- No valid CPT codes found AND primary_procedure text is ambiguous
+- Primary_procedure text used with unclear/partial match
+- CPT code valid but rare/uncommon code not well-documented in mapping
+
+### Step 6: Manual Review Flag
+
+**Flag = "Yes"** if any of the following:
+
+- Classification confidence = "Low"
+- Category = "Unclassified"
+- Subtype = "Other" within any category
+- Multiple high-priority therapeutic procedures in same claim (e.g., arterial intervention + embolization + ablation)
+- Embolization category assigned (requires ICD-10 review for subtype - see Section IV)
+- Oncologic Interventions category assigned (requires ICD-10 review for subtype - see Section IV)
+
+**Flag = "No"** otherwise
+
+---
+
+## IV. ICD-10 REFINEMENT RULES (TO BE DEVELOPED)
+
+**Purpose**: Use ICD-10 codes to refine subtype classification for ambiguous CPT codes, particularly:
+
+- Embolization subtypes (UFE vs Y90 vs TACE vs Hemorrhage/Trauma)
+- Oncologic intervention subtypes (distinguishing Y90 from TACE when both use CPT 37243)
+
+**Status**: TO BE DEVELOPED in collaboration with clinical team
+
+**Initial Framework**:
+
+### Embolization Subtype Refinement:
+
+```
+IF CPT = 37243 (embolization for tumor):
+  - AND ICD-10 = D25.x (uterine leiomyoma) → UFE
+  - AND ICD-10 = C22.x (liver cancer) + no chemo codes → Y90 (probable)
+  - AND ICD-10 = C22.x (liver cancer) + chemo codes (96420-96423) → TACE
+  - AND ICD-10 = other cancer codes → Tumor Embolization (bland)
+
+IF CPT = 37244 (hemorrhage/lymphatic):
+  → Hemorrhage/Trauma (confirmed)
+
+IF CPT = 37241 or 37242:
+  - AND ICD-10 = I86.1 (varicocele) → Varicocele
+  - AND ICD-10 = S00-T88 (trauma codes) → Hemorrhage/Trauma
+  - Otherwise → Other Embolization
+```
+
+### Oncologic Subtype Refinement:
+
+```
+IF thermal ablation CPT codes present → Thermal Ablation (confirmed)
+
+IF CPT = 37243 + liver cancer ICD-10:
+  - AND CPT includes 96420-96423 (chemo) → TACE
+  - AND CPT includes 79445 (radiopharmaceutical) → Y90
+  - AND no chemo/radiopharm codes → Tumor Embolization (bland)
+  
+Requires manual review if unable to distinguish Y90 from TACE
+```
+
+**Action Item**: Develop comprehensive ICD-10 mapping after initial CPT-based classification is validated.
+
+---
+
+## V. IMPLEMENTATION PSEUDOCODE
+
+```
+FOR each unique claim_id:
+  
+  // Step 1: Collect claim data
+  cpt_codes = GET all CPT codes for claim_id
+  primary_proc = GET primary_procedure value for claim_id
+  icd10_codes = GET all ICD-10 codes for claim_id (for future use)
+  
+  // Step 2: Validate CPT codes
+  valid_cpts = []
+  FOR each cpt IN cpt_codes:
+    IF cpt IN master_cpt_mapping:
+      valid_cpts.append(cpt)
+  
+  // Step 3: Apply hierarchy if valid CPTs exist
+  IF valid_cpts is not empty:
+    
+    // Find all categories present
+    categories_found = []
+    FOR each cpt IN valid_cpts:
+      category = LOOKUP category from master_mapping(cpt)
+      categories_found.append(category)
+    
+    // Apply hierarchy to select primary category
+    primary_category = HIGHEST_PRIORITY(categories_found, HIERARCHY)
+    
+    // Determine subtype within primary category
+    subtypes_found = []
+    FOR each cpt IN valid_cpts:
+      IF LOOKUP category(cpt) == primary_category:
+        subtype = LOOKUP subtype from master_mapping(cpt)
+        subtypes_found.append(subtype)
+    
+    primary_subtype = FIRST(subtypes_found)  // Use first subtype found
+    
+    // Assign confidence
+    IF no_conflicts AND subtype_clear:
+      confidence = "High"
+    ELSE IF embolization OR oncologic OR multiple_therapeutic:
+      confidence = "Medium"
+    ELSE:
+      confidence = "High"
+  
+  // Step 4: Fallback to primary_procedure if no valid CPTs
+  ELSE:
+    primary_category, primary_subtype = TEXT_MATCH(primary_proc, text_mapping_rules)
+    
+    IF match_found:
+      confidence = "Medium"
+    ELSE:
+      primary_category = "Unclassified"
+      primary_subtype = "Unclassified"
+      confidence = "Low"
+  
+  // Step 5: Set manual review flag
+  IF confidence == "Low" OR 
+     primary_category == "Unclassified" OR
+     primary_subtype contains "Other" OR
+     multiple_high_priority_procedures OR
+     primary_category == "Embolization" OR
+     primary_category == "Oncologic Interventions":
+    manual_review_flag = "Yes"
+  ELSE:
+    manual_review_flag = "No"
+  
+  // Step 6: Output
+  OUTPUT claim_id, primary_category, primary_subtype, confidence, manual_review_flag
+
+END FOR
+```
+
+---
+
+## VI. OUTPUT SPECIFICATION
+
+**Required Output Fields**:
+
+1. `claim_id` - Original claim identifier
+2. `procedure_category` - One of 9 categories (or "Unclassified")
+3. `procedure_subtype` - Specific subtype within category (or "Unclassified")
+4. `classification_confidence` - "High", "Medium", or "Low"
+5. `manual_review_flag` - "Yes" or "No"
+
+**Optional Output Fields** (recommended for validation): 6. `cpt_codes_used` - List of CPT codes found in claim 7. `primary_cpt_used` - Primary CPT code that determined classification 8. `classification_source` - "CPT" or "Primary_Procedure" 9. `hierarchy_priority` - Numeric priority (1-9) of assigned category
+
+---
+
+## VII. VALIDATION & QUALITY ASSURANCE
+
+### Initial Validation Steps:
+
+1. **Run classification on full dataset** (5,000 cases)
+2. **Generate summary statistics**:
+   - Count by procedure_category
+   - Count by procedure_subtype within each category
+   - Count by classification_confidence
+   - Count by manual_review_flag
+3. **Compare to primary_procedure field**:
+   - Cross-tabulation of primary_procedure vs procedure_category
+   - Identify major discrepancies
+4. **Manual review sample**:
+   - Review 10-20 cases per category
+   - Focus on "Medium" and "Low" confidence cases
+   - Validate hierarchy application for multi-procedure claims
+
+### Ongoing Quality Checks:
+
+- Monitor "Unclassified" rate (target: \<5%)
+- Monitor "Manual Review" flag rate (target: \<20%)
+- Review new/uncommon CPT codes quarterly
+- Update master mapping as new procedures introduced
+
+---
+
+## VIII. FUTURE ENHANCEMENTS
+
+1. **ICD-10 Integration**: Develop comprehensive embolization and oncologic subtype refinement rules
+2. **Physician Validation**: Use IR physician list to validate procedure classifications
+3. **Supply Cost Integration**: Link procedure categories to supply cost data for spend analysis
+4. **Practice Pattern Analysis**: Build physician-level dashboards showing procedure mix and variation
+5. **Automated Alerts**: Flag unusual procedure combinations or coding patterns for compliance review
